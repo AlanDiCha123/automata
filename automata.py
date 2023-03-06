@@ -1,203 +1,102 @@
 import re
 
-# Definimos funcion caracter
 
-
-def checkCharacter(char: str, state: int = 0) -> int:
-    global simbolo
-    global Fin
-    simbolo = ""
-    Fin = ""
+def checkCharacter(char: str) -> int:
+    '''
+    Toma un caracter, verifica el tipo y retorna el numero de acuerdo con el arreglo de simbolos
+    '''
     digit = "[0-9]"
     letra_min = "[a-z]"
     letra_may = "[A-Z]"
-    letrai_min1 = "[a-h]"
-    letrai_min2 = "[j-z]"
-    letraf_min1 = "[a-e]"
-    letraf_min2 = "[g-z]"
     letra_i = "i"
     letra_f = "f"
-    guion = "_"
-
-    if state == 0:
+    underscore = "_"
+    if re.match(letra_min, char) or re.match(letra_may, char):
         if re.match(letra_i, char):
-            simbolo = " letra "
-            return 1, False
-        elif re.match(letra_may, char):
-            simbolo = " letra "
-        elif re.match(guion, char):
-            return 3, False
-        elif re.match(letrai_min1, char):
-            simbolo = " letra "
-            return 3, False
-        elif re.match(letrai_min2, char):
-            simbolo = " letra "
-            return 3, False
-        elif re.match(digit, char):
-            simbolo = " digit "
-            return 4, False
-        elif char == Fin:
-            return state, True
-        else:
-            simbolo = " symbol "
-            return 5, False
-    elif state == 1:
-        if re.match(letra_i, char):
-            simbolo = " letra "
-            return 1, False
+            return 0
         elif re.match(letra_f, char):
-            return 2, False
-        elif re.match(guion, char):
-            return 1, False
-        elif re.match(letra_may, char):
-            simbolo = " letra "
-        elif re.match(letraf_min1, char):
-            simbolo = " letra "
-            return 1, False
-        elif re.match(letraf_min2, char):
-            simbolo = " letra "
-            return 1, False
-        elif re.match(digit, char):
-            simbolo = " digit "
-            return 1, False
-        elif char == Fin:
-            return state, True
+            return 1
         else:
-            simbolo = " symbol "
-            return 5, False
-    elif state == 2:
-        if re.match(letra_i, char):
-            simbolo = " i "
-            return 3, False
-        elif re.match(letra_may, char):
-            simbolo = " letra "
-            return 3, False
-        elif re.match(guion, char):
-            return 3, False
-        elif re.match(letrai_min1, char):
-            simbolo = " letra "
-            return 3, False
-        elif re.match(letrai_min2, char):
-            simbolo = " letra "
-            return 3, False
-        elif re.match(digit, char):
-            simbolo = " digit "
-            return 3, False
-        elif char == Fin:
-            simbolo = " symbol "
-            return state, True
-        else:
-            return 5, False
-    elif state == 3:
-        if re.match(letra_i, char):
-            simbolo = " i "
-            return 3, False
-        elif re.match(letra_may, char):
-            simbolo = " letra "
-            return 3, False
-        elif re.match(letrai_min1, char):
-            simbolo = " letra "
-            return 3, False
-        elif re.match(guion, char):
-            return 3, False
-        elif re.match(letrai_min2, char):
-            simbolo = " letra "
-            return 3, False
-        elif re.match(digit, char):
-            simbolo = " digit "
-            return 3, False
-        elif char == Fin:
-            return state, True
-        else:
-            simbolo = " symbol "
-            return 5, False
-    elif state == 4:
-        if re.match(letra_i, char):
-            simbolo = " i "
-            return 5, False
-        elif re.match(letra_may, char):
-            simbolo = " letra "
-            return 5, False
-        elif re.match(letrai_min1, char):
-            simbolo = " letra "
-            return 5, False
-        elif re.match(letrai_min2, char):
-            simbolo = " letra "
-            return 5, False
-        elif re.match(digit, char):
-            simbolo = " digit "
-            return 4, False
-        elif char == Fin:
-            return state, True
-        else:
-            simbolo = " symbol "
-            return 5, False
-    elif state == 5:
-        if re.match(digit, char):
-            simbolo = " digit "
-            return 5, False
-        elif re.match(letra_min, char):
-            simbolo = " letra "
-            return 5, False
-        elif re.match(letra_may, char):
-            simbolo = " letra "
-            return 5, False
-        elif char == Fin:
-            return state, True
-        else:
-            simbolo = " symbol "
-            return 5, False
-    exit()
+            return 3
+    elif re.match(digit, char):
+        return 4
+    elif re.match(underscore, char):
+        return 2
+    else:
+        return 5
 
 
-# Definimos funcion encabezado
 def encabezado():
-    print('| Edo. Actual | Caracter | Simbolo | Edo. Siguiente |')
+    '''Encargada de imprimir el encabezado'''
+    print('| Edo. Actual | Caracter |  Clase  | Edo. Siguiente |')
     body()
 
 
-# imprime linea
 def body():
-    print("+--------------+-------+-----------+----------------+")
+    '''Encargada de imprimir una linea'''
+    print("+-------------+----------+---------+----------------+")
 
 
-# MAIN
-# Tabla de transiciones
-# table: int | str = [
-#     [1, 3, 3, 3, 4, 5, "E"],
-#     [1, 2, 1, 1, 1, 5, "A"],
-#     [3, 3, 3, 3, 3, 5, "A"],
-#     [3, 3, 3, 3, 3, 5, "A"],
-#     [5, 5, 5, 5, 4, 5, "A"],
-#     [5, 5, 5, 5, 5, 5, "A"],
-# ]
+def automata():
+    '''
+    Funcion principal encargada de imprimir la tabla de transiciones entre los estados
+    '''
+    # * Tabla de transiciones
+    table = [
+        [1, 3, 3, 3, 4, 5],
+        [1, 2, 1, 1, 1, 5],
+        [3, 3, 3, 3, 3, 5],
+        [3, 3, 3, 3, 3, 5],
+        [5, 5, 5, 5, 4, 5],
+        [5, 5, 5, 5, 5, 5],
+    ]
+    '''
+    Se encarga de catalogar los caracteres en los simbolos correspondientes. 
+    Si la letra es "i" o "f" se cataloga como letra, por ello se repite letra varias veces
+    Teniendo en cuenta el sig. orden
+    i: letra, f: letra, _: simbolo, [a-z],[A-Z]: letra, [0-9]: digito, [$|%|...]: simbolo
+    '''
+    simbolos = ["letra", "letra", "simbolo", "letra", "digito", "simbolo"]
+    # * Guarda el estado siguiente. Por default inicia en el estado 0
+    sig_estado: int = 0
+    # * Almacena la cadena a evaluar
+    cadena: str = input("Ingrese una cadena a evaluar: ")
 
-string: str = input("Ingrese una cadena a evaluar: ")
-body()
-encabezado()
-state = 0
-# Loop to iterate in string
-if len(string) == 0:
-    print("no hay nada para evaluar")
-else:
-    for char in string:
+    # Llamamos a la funcion body y encabezado para pintar el encabezado formateado
+    body()
+    encabezado()
 
-        next_state = state
-        # Call character method to verify if a character is correct
-        state, fin = checkCharacter(char, state)
-        print(
-            f"|      {next_state}      |    {char}     | {simbolo} |        {state}       |")
-        body()
+    # Verifica si la cadena ingresada es vacia o no
+    if len(cadena) == 0:
+        print("No hay nada para evaluar")
+    else:
+        # Ciclo toma cada caracter de la cadena y la evalua llamando a la funcion
+        # checkCharacter, la cual retorna la clase a la que pertenece dicho caracter
+        for char in cadena:
+            # Guarda el estado actual para no borrarse
+            estado_actual = sig_estado
+            # Call character method to verify if a character is correct
+            clase = checkCharacter(char)
+            # Almacena el siguiente estado segun la tabla (array) y los parametros dados
+            sig_estado = table[estado_actual][clase]
+            print(
+                f"|      {estado_actual}      |    {char}     | {simbolos[clase]} |        {sig_estado}       |")
+            body()
+    # * El estado 5 es aquel estado que determina cuando la cadena no es valida
+    msg = "Cadena valida" if sig_estado != 5 else "Cadena no valida"
+    # * Si el estado no es 5 verifica el ultimo estado almacenado y asigna que tipo fue
+    # * la cadena
+    if sig_estado != 5:
+        if sig_estado == 1:
+            print("Es un identificador")
+        elif sig_estado == 2:
+            print("Es una palabra reservada")
+        elif sig_estado == 3:
+            print("Es un identificador")
+        elif sig_estado == 4:
+            print("Es un numero")
+    print(msg)
 
-msg = "Cadena valida" if state != 5 else "Cadena no valida"
-if state != 5:
-    if state == 1:
-        print("Es un identificador")
-    elif state == 2:
-        print("Es una palabra reservada")
-    elif state == 3:
-        print("Es un identificador")
-    elif state == 4:
-        print("Es un numero")
 
-print(msg)
+if __name__ == "__main__":
+    automata()
