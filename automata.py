@@ -26,18 +26,7 @@ def checkCharacter(char: str) -> int:
         return 5
 
 
-def encabezado():
-    '''Encargada de imprimir el encabezado'''
-    print('| Edo. Actual | Caracter |  Clase  | Edo. Siguiente |')
-    body()
-
-
-def body():
-    '''Encargada de imprimir una linea'''
-    print("+-------------+----------+---------+----------------+")
-
-
-def automata():
+def autom(cadena: str):
     '''
     Funcion principal encargada de imprimir la tabla de transiciones entre los estados
     '''
@@ -59,29 +48,16 @@ def automata():
     simbolos = ["letra", "letra", "simbolo", "letra", "digito", "simbolo"]
     # * Guarda el estado siguiente. Por default inicia en el estado 0
     sig_estado: int = 0
-    # * Almacena la cadena a evaluar
-    cadena: str = input("Ingrese una cadena a evaluar: ")
 
-    # Llamamos a la funcion body y encabezado para pintar el encabezado formateado
-    body()
-    encabezado()
-
-    # Verifica si la cadena ingresada es vacia o no
-    if len(cadena) == 0:
-        print("No hay nada para evaluar")
-    else:
-        # Ciclo toma cada caracter de la cadena y la evalua llamando a la funcion
-        # checkCharacter, la cual retorna la clase a la que pertenece dicho caracter
-        for char in cadena:
-            # Guarda el estado actual para no borrarse
-            estado_actual = sig_estado
-            # Call character method to verify if a character is correct
-            clase = checkCharacter(char)
-            # Almacena el siguiente estado segun la tabla (array) y los parametros dados
-            sig_estado = table[estado_actual][clase]
-            print(
-                f"|      {estado_actual}      |    {char}     | {simbolos[clase]} |        {sig_estado}       |")
-            body()
+    # Ciclo toma cada caracter de la cadena y la evalua llamando a la funcion
+    # checkCharacter, la cual retorna la clase a la que pertenece dicho caracter
+    for char in cadena:
+        # Guarda el estado actual para no borrarse
+        estado_actual = sig_estado
+        # Call character method to verify if a character is correct
+        clase = checkCharacter(char)
+        # Almacena el siguiente estado segun la tabla (array) y los parametros dados
+        sig_estado = table[estado_actual][clase]
     # * El estado 5 es aquel estado que determina cuando la cadena no es valida
     msg = "Cadena valida" if sig_estado != 5 else "Cadena no valida"
     # * Si el estado no es 5 verifica el ultimo estado almacenado y asigna que tipo fue
@@ -98,5 +74,17 @@ def automata():
     print(msg)
 
 
+def checkTable(estado_actual: int, clase: int) -> int:
+    table = [
+        [1, 3, 3, 3, 4, 5],
+        [1, 2, 1, 1, 1, 5],
+        [3, 3, 3, 3, 3, 5],
+        [3, 3, 3, 3, 3, 5],
+        [5, 5, 5, 5, 4, 5],
+        [5, 5, 5, 5, 5, 5],
+    ]
+    return table[estado_actual][clase]
+
+
 if __name__ == "__main__":
-    automata()
+    autom()
